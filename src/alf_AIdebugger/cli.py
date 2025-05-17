@@ -12,6 +12,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.progress import Progress
 from rich.prompt import Confirm
+from rich.rule import Rule
 
 from .analyzer import CodeAnalyzer
 from .utils import (
@@ -49,7 +50,41 @@ class AICodingAssistantCLI(cmd.Cmd):
             "generated_files": [],
         }
         self.setup_client()
+        self._display_initial_directory_listing()
         
+    def _display_initial_directory_listing(self):
+        """Display the contents of the current directory at startup."""
+        try:
+            cwd = os.getcwd()
+            console.print(Rule(f"[bold sky_blue1]Current Directory: {cwd}[/bold sky_blue1]"))
+            
+            items = os.listdir(".")
+            if not items:
+                console.print(Panel("[dim]Directory is empty.[/dim]", border_style="grey70"))
+                return
+
+            table = Table(box=None, show_header=False, padding=(0, 1))
+            table.add_column("Type", style="dim")
+            table.add_column("Name")
+
+            dirs = sorted([item for item in items if os.path.isdir(item)])
+            files = sorted([item for item in items if os.path.isfile(item)])
+
+            for item_name in dirs:
+                if not item_name.startswith('.'): # Basic filter for hidden files/dirs
+                    table.add_row("📁", f"[bold blue]{item_name}/[/bold blue]")
+            
+            for item_name in files:
+                if not item_name.startswith('.'): # Basic filter for hidden files/dirs
+                    table.add_row("📄", f"[green]{item_name}[/green]")
+            
+            console.print(Panel(table, border_style="sky_blue1", expand=False))
+            console.print(" ") # Add a blank line for spacing before the prompt
+
+        except Exception as e:
+            console.print(f"[red]Could not display directory listing: {e}[/red]")
+            console.print(" ") # Add a blank line for spacing
+
     def setup_client(self):
         """Set up the OpenAI client with SambaNova configuration"""
         api_key = os.environ.get("SAMBANOVA_API_KEY")
@@ -98,77 +133,73 @@ class AICodingAssistantCLI(cmd.Cmd):
             if self.current_file not in self.history["analyzed_files"]:
                 self.history["analyzed_files"].append(self.current_file)
                 
-            console.print(f"\n[green]Analyzing file: {arg}[/green]")
+            console.print(Rule(f"[bold white on royal_blue1] Analyzing file: {arg} [/bold white on royal_blue1]"))
             self.print_file_content()
         except FileNotFoundError:
             console.print(f"[red]File not found: {arg}[/red]")
             return
 
-        # Run static analysis
-        with Progress() as progress:
+        console.print(Rule("[bold bright_cyan]Static Analysis[/bold bright_cyan]"))
+        with Progress(transient=True) as progress:
             task = progress.add_task("[cyan]Running static analysis...", total=100)
-            progress.update(task, advance=50)
-            
+            progress.update(task, advance=70)
             static_issues = self.analyzer.static_analysis(self.file_content)
             progress.update(task, completed=100)
         
-        # Show static analysis results
         self.show_static_analysis_results(static_issues)
         
-        # Get runtime errors
         error_context = self.get_error_context()
         
-        # Get AI-powered analysis
-        with Progress() as progress:
+        console.print(Rule("[bold bright_magenta]AI-Powered Analysis[/bold bright_magenta]"))
+        ai_analysis_content = "Fetching AI analysis..."
+        with Progress(transient=True) as progress:
             task = progress.add_task("[cyan]Getting AI analysis...", total=100)
-            progress.update(task, advance=50)
-            
+            progress.update(task, advance=70)
             analysis = self.analyzer.analyze_code(self.file_content, error_context)
+            ai_analysis_content = analysis if analysis else "[yellow]No AI analysis provided.[/yellow]"
             progress.update(task, completed=100)
             
-        console.print("\n[cyan]Here's what I found in your code:[/cyan]")
-        console.print(Markdown(analysis))
+        console.print(Panel(Markdown(ai_analysis_content), title="💡 AI Insights", border_style="bright_blue", expand=False))
         
-        # Show code complexity metrics
+        console.print(Rule("[bold yellow3]Code Complexity Metrics[/bold yellow3]"))
         metrics = get_code_complexity_metrics(self.file_content)
         display_complexity_report(metrics)
         
-        # Show available actions
         self.show_available_actions()
 
     def show_static_analysis_results(self, issues):
-        """Display static analysis results"""
+        """Display static analysis results in a structured way"""
         has_issues = any(issues.values())
         
         if not has_issues:
-            console.print("[green]No static issues found[/green]")
+            console.print(Panel("[green]✔️ No static issues found.[/green]", border_style="green", expand=False))
             return
             
-        console.print("\n[yellow]Static Analysis Results:[/yellow]")
-        
-        # Show syntax errors
+        output_table = Table(show_header=False, box=None, padding=(0,1))
+        output_table.add_column(style="dim")
+        output_table.add_column()
+
         if issues["syntax_errors"]:
-            console.print("[red]Syntax Errors:[/red]")
+            output_table.add_row("[bright_red]❌ Syntax Errors:", "")
             for error in issues["syntax_errors"]:
-                console.print(f"  Line {error['line']}: {error['message']}")
+                output_table.add_row("", f"  Line {error['line']}: {error['message']}")
         
-        # Show undefined names
         if issues["undefined_names"]:
-            console.print("[yellow]Undefined Names:[/yellow]")
+            output_table.add_row("[yellow]⚠️ Undefined Names:", "")
             for item in issues["undefined_names"]:
-                console.print(f"  {item['name']}: {item['message']}")
+                output_table.add_row("", f"  {item['name']}: {item['message']}")
         
-        # Show unused variables
         if issues["unused_variables"]:
-            console.print("[blue]Unused Variables:[/blue]")
+            output_table.add_row("[cyan]ℹ️ Unused Variables:", "")
             for item in issues["unused_variables"]:
-                console.print(f"  {item['name']}: {item['message']}")
+                output_table.add_row("", f"  {item['name']}: {item['message']}")
         
-        # Show complexity issues
         if issues["complexity_issues"]:
-            console.print("[magenta]Complexity Issues:[/magenta]")
+            output_table.add_row("[magenta]📈 Complexity Issues:", "")
             for item in issues["complexity_issues"]:
-                console.print(f"  {item['name']}: {item['message']}")
+                output_table.add_row("", f"  {item['name']}: {item['message']}")
+        
+        console.print(Panel(output_table, title="Static Analysis Summary", border_style="royal_blue1", expand=False))
 
     def show_available_actions(self):
         """Show available actions after analysis"""
@@ -818,8 +849,10 @@ class AICodingAssistantCLI(cmd.Cmd):
         if not self.current_file or not self.file_content:
             return
         
-        console.print("\n[cyan]File content:[/cyan]")
-        console.print(Syntax(self.file_content, "python"))
+        console.print(Panel(Syntax(self.file_content, "python", theme="github-dark", line_numbers=True, background_color="#2b2b2b"),
+                          title=f"📄 {self.current_file}", 
+                          border_style="royal_blue1",
+                          expand=False))
 
     def get_error_context(self) -> str:
         """Run the file and capture any error message"""

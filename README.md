@@ -1,6 +1,6 @@
 # Nova CLI-Agent (powered by SambaNova)
 
-Nova CLI-Agent: Your lightweight, open-source AI coding companion, powered by SambaNova. A nimble alternative for code generation, analysis, bug prediction, and learning, right in your terminal.
+Nova CLI-Agent: Your lightweight, open-source AI coding companion, powered by SambaNova. A nimble alternative of(codex-cli and claude code) for code generation, analysis, bug prediction, and learning, right in your terminal.
 
 ## Features
 
