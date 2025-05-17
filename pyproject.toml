@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "nova-cli-agent"
 version = "0.1.0"
-description = "AI-powered coding assistant and bug predictor"
+description = "Nova CLI-Agent: Your lightweight, open-source AI coding companion, powered by SambaNova. A nimble alternative for code generation, analysis, bug prediction, and learning, right in your terminal."
 authors = [
     {name = "SambaNova", email = "author@example.com"},
 ]

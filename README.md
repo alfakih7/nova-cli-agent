@@ -1,6 +1,6 @@
 # Nova CLI-Agent (powered by SambaNova)
 
-An AI-powered coding assistant that helps you write, debug, optimize, and understand code. This tool uses SambaNova's AI capabilities to provide intelligent coding support across multiple programming languages.
+Nova CLI-Agent: Your lightweight, open-source AI coding companion, powered by SambaNova. A nimble alternative for code generation, analysis, bug prediction, and learning, right in your terminal.
 
 ## Features
 
