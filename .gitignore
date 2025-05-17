@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Distribution / packaging
+.Python
+*.manifest
+*.spec
+
+# PyInstaller
+# Usually these files are written by a PyInstaller script; adding them
+# to your project repo is not recommended.
+# *.manifest
+# *.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+.pytest_cache/
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store 
