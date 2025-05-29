@@ -19,7 +19,7 @@ Nova CLI-Agent: Your lightweight, open-source AI coding companion, powered by Sa
 ### Prerequisites
 
 - Python 3.7 or higher
-- SambaNova API key (get it from [SambaNova Console](https://console.sambanova.ai/))
+- SambaNova API key (get it from [SambaNova Console](https://cloud.sambanova.ai/)
 
 ### Install from PyPI
 
