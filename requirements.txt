@@ -1,0 +1,22 @@
+# Nova CLI-Agent Requirements
+# Core dependencies for the AI coding assistant
+
+# AI/API clients
+openai
+
+# Terminal UI and formatting
+rich>=13.0.0
+
+# Web search functionality
+tavily-python>=0.3.0
+
+# Environment variables management
+python-dotenv
+
+# Python standard library extensions (if needed)
+# Note: The following are built-in Python modules and don't need to be installed:
+# - os, sys, ast, json, subprocess, shutil, traceback, cmd
+# - typing, pathlib, base64, hashlib, platform, uuid, time, difflib
+
+# Development/Build tools (optional, for development only)
+# setuptools>=61.0  # Uncomment if you need to build from source 

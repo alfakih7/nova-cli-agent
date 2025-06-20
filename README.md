@@ -37,20 +37,38 @@ pip install -e .
 
 ## Usage
 
-1. Set your SambaNova API key (recommended):
+1. Set up your API keys:
 
-```bash
-export SAMBANOVA_API_KEY=your_api_key_here
-```
-   Alternatively, if the environment variable is not set, `nova-cli` will prompt you to enter the API key when it starts.
+   **Option A: Using .env file (recommended):**
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env and add your actual API keys
+   SAMBANOVA_API_KEY=your_sambanova_api_key_here
+   TAVILY_API_KEY=your_tavily_api_key_here
+   ```
 
-2. Launch the AI coding assistant:
+   **Option B: Using environment variables:**
+   ```bash
+   export SAMBANOVA_API_KEY=your_sambanova_api_key_here
+   export TAVILY_API_KEY=your_tavily_api_key_here
+   ```
+
+2. Test your API keys (optional but recommended):
+
+   ```bash
+   python test_api_keys.py
+   ```
+   This will verify that your API keys are working correctly.
+
+3. Launch the AI coding assistant:
 
 ```bash
 nova-cli
 ```
 
-3. Use the available commands:
+4. Use the available commands:
 
 ```
 (nova-cli) generate python fibonacci.py   # Generate a new Python file
@@ -100,6 +118,39 @@ The assistant will analyze the code and identify potential bugs, edge cases, rac
 ```
 
 Get a detailed explanation of JavaScript promises, including how they work, when to use them, common mistakes, and best practices.
+
+## Troubleshooting
+
+### API Key Issues
+
+If you're getting "Invalid API key" errors:
+
+1. **Check your .env file exists** and has the correct format:
+   ```bash
+   cat .env
+   ```
+
+2. **Test your API keys**:
+   ```bash
+   python test_api_keys.py
+   ```
+
+3. **Verify your SambaNova API key**:
+   - Go to [SambaNova Console](https://cloud.sambanova.ai/)
+   - Make sure your API key is active and has credits
+   - Copy the exact key (starts with `sk-` usually)
+
+4. **Common fixes**:
+   - Make sure there are no spaces around the `=` in your .env file
+   - Don't use quotes around the API key values in .env
+   - Restart your terminal after updating .env
+   - Run `pip install python-dotenv` if environment variables aren't loading
+
+### Web Search Issues
+
+If Tavily search isn't working:
+- Check your `TAVILY_API_KEY` in the .env file
+- The current key in the example should work for basic testing
 
 ## License
 

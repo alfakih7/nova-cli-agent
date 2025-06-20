@@ -1,0 +1,15 @@
+markdown
+# NOVA-CLI-AGENT Instructions
+
+## Overview
+This document provides comprehensive instructions for how the AI agent should plan, think, and execute user tasks within the NOVA-CLI-AGENT system. The agent operates in two modes: **Interactive Mode** (with user confirmations) and **Agent Mode** (autonomous execution).
+
+## Core Principles
+
+### 1. Understanding User Intent
+- **Parse Natural Language**: Convert user requests into actionable tasks
+- **Context Awareness**: Consider the current project state, file structure, and previous actions
+- **Clarification**: Ask for clarification only when absolutely necessary
+- **Assumption Making**: Make reasonable assumptions based on common development practices
+
+### 2. Planning Methodology

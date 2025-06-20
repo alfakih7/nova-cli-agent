@@ -6,6 +6,12 @@ import traceback
 from typing import Dict, List, Tuple, Optional, Any
 from rich.console import Console
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # Load environment variables from .env file
+except ImportError:
+    pass  # dotenv is optional
+
 console = Console()
 
 class CodeAnalyzer:
